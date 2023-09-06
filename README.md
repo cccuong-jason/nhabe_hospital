@@ -1,6 +1,6 @@
 # nhabe-dashboard-vue3
 
-Nha Be Hospital Dashboard Vue 3, ElementUI &amp; TailwindCSS
+Hệ thống báo cáo y khoa Bệnh viện Nhà Bè, ElementUI &amp; TailwindCSS
 
 ## Nice stack (VET)
 

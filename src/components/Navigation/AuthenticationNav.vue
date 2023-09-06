@@ -16,10 +16,10 @@
               <el-dropdown-item divided>
                 <div class='flex flex-col items-start gap-y-4 pt-4.5 pb-9'>
                   <router-link to='/dashboard' class='ml-1 py-px text-default text-sm font-medium'>
-                    Dashboard
+                    Bảng điều khiển
                   </router-link>
                   <router-link to='/login' class='ml-1 py-px text-default text-sm font-medium'>
-                    Login
+                    Đăng nhập
                   </router-link>
                 </div>
               </el-dropdown-item>
@@ -35,7 +35,7 @@
             to='/dashboard'
             class='text-black text-sm hover:text-sky-400 font-normal'
           >
-            Dashboard
+            Bảng điều khiển
           </router-link>
         </div>
         <div>
@@ -43,7 +43,7 @@
             to='/login'
             class='text-black text-sm hover:text-sky-400 font-normal'
           >
-            Login
+            Đăng nhập
           </router-link>
         </div>
       </div>

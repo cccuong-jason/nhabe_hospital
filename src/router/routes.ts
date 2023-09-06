@@ -4,9 +4,8 @@ import {
   DocumentReportIcon,
   ChartBarIcon,
 } from '@heroicons/vue/outline'
-import ProjectTable from 'modules/table/views/components/ProjectTable.vue'
-import ReportDetail from 'modules/table/views/components/ReportDetail.vue'
 
+const HomePage = () => import('modules/home/component/HomePage.vue')
 const Login = () => import('modules/auth/views/login.vue')
 const NotFound = () => import('modules/pages/views/404.vue')
 const Dashboard = () => import('modules/dashboard/views/index.vue')
@@ -18,10 +17,12 @@ const ReportsTable = () => import('modules/table/views/index.vue')
 const routes = [
   {
     path: '/',
-    redirect: '/reports',
+    component: HomePage,
+    name: 'Home',
     meta: {
-      requiresAuth: false,
-    },
+      title: 'Trang chủ',
+      requiresAuth: false
+    }
   },
   {
     path: '/reports',
@@ -42,8 +43,7 @@ const routes = [
       title: 'Tạo báo cáo',
       requiresAuth: false,
       layout: 'report',
-      isReportLayout: true,
-    },
+      isReportLayout: true, },
   },
   {
     path: '/dashboard',
@@ -88,14 +88,14 @@ const routes = [
       requiresAuth: false,
     },
   },
-  // {
-  //   path: '/:pathMatch(.*)*',
-  //   component: NotFound,
-  //   name: 'NotFound',
-  //   meta: {
-  //     requiresAuth: false,
-  //   },
-  // },
+  {
+    path: '/:pathMatch(.*)*',
+    component: NotFound,
+    name: 'NotFound',
+    meta: {
+      requiresAuth: false,
+    },
+  },
 ]
 
 export default routes

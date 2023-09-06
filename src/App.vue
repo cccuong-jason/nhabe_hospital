@@ -43,7 +43,7 @@ export default defineComponent({
 
     routerNavigation.beforeEach(async (to, from) => {
       if (!isAuthenticated.value && isAuthLayout.value) {
-        if (to.name !== 'login' && to.name !== 'Reports' && to.name !== 'CreateReport') {
+        if (to.name !== 'login' && to.name !== 'Reports' && to.name !== 'CreateReport' && to.name !== 'Home') {
           await routerNavigation.push({ name: 'login' })
         }
         return

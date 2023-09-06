@@ -1,6 +1,6 @@
 <template>
   <div class='main-page'>
-    <div v-if='isReportIntense' class='report-page'>
+    <div class='report-page'>
       <div class='centered-container'>
         <el-image :src='MedicalReportBanner' fit='contain' />
         <el-space>
@@ -72,59 +72,7 @@
         </el-drawer>
       </div>
     </div>
-    <div v-else class='instruction-page flex items-center justify-center h-screen'>
-      <el-space direction='vertical'>
-        <img :src='LogoNhabe' alt='logo nha be' height='100' width='100'>
-        <span
-          class='text-3xl font-black align-bottom'>Chào mừng đến với hệ thống báo cáo y khoa của Bệnh viện Nhà Bè</span>
-        <span class='text-1.1 italic font-thin'>Vui lòng chọn tạo báo cáo hoặc truy cập bảng điều khiển (chỉ dành cho nhân viên bệnh viện)</span>
-        <el-row :gutter='20' class='mt-5'>
-          <el-col :span='12'>
-            <el-card class='box-card'>
-              <template #header>
-                <div class='card-header'>
-                  <img
-                    :src='NhaBeHospitalReport'
-                    alt='nhabe_create_image'
-                    class='image'
-                    height='300'
-                    width='500' />
-                </div>
-              </template>
-              <template #default>
-                <div class='text-center'>
-                  <el-button bg class='text-1.5 font-medium w-full' size='large' text @click='isReportIntense = true'>
-                    Tạo báo cáo
-                  </el-button>
-                </div>
-              </template>
-            </el-card>
-          </el-col>
-          <el-col :span='12'>
-            <el-card class='box-card'>
-              <template #header>
-                <div class='card-header'>
-                  <img
-                    :src='NhaBeHospitalDashboard'
-                    alt='nhabe_dashboard_image'
-                    class='image'
-                    height='300'
-                    width='500' />
-                </div>
-              </template>
-              <template #default>
-                <div class='text-center'>
-                  <el-button bg class='text-1.5 font-medium w-full' size='large' text type='success'
-                             @click='$router.push("/dashboard")'>Truy cập bảng điều
-                    khiển
-                  </el-button>
-                </div>
-              </template>
-            </el-card>
-          </el-col>
-        </el-row>
-      </el-space>
-    </div>
+
   </div>
 </template>
 
@@ -140,13 +88,6 @@ import { ElCascaderPanel, ElLoading, ElMessage } from 'element-plus'
 
 import { addNewLine, indexMethod } from 'utils/index'
 
-import NhaBeHospitalReport from '@/assets/images/nhabe_report_create.png'
-import NhaBeHospitalDashboard from '@/assets/images/nhabe_report_dashboard.png'
-import LogoNhabe from '@/assets/images/nhabe_logo.png'
-import BM01 from '@/assets/fillable_pdf/BM01.pdf'
-import { getListReport} from '../../../services/reports/getReports'
-import { PDFDocument } from 'pdf-lib'
-
 
 export default {
   name: 'Reports',
@@ -160,7 +101,6 @@ export default {
     const isConfirm = ref(false)
     const nc3Checkbox = ref([])
     const isReady = ref(false)
-    const isReportIntense = ref(false)
 
     const openReportForm = () => {
       if (reportType.value === '') {
@@ -443,10 +383,6 @@ export default {
       nc3Checkbox,
       handleCheckbox,
       isReady,
-      isReportIntense,
-      NhaBeHospitalReport,
-      NhaBeHospitalDashboard,
-      LogoNhabe,
       testIntegration,
     }
   },

@@ -90,3 +90,9 @@ export default defineComponent({
   },
 })
 </script>
+
+<style>
+body .authentication-form .el-input .el-input__inner {
+  box-shadow: none !important;
+}
+</style>

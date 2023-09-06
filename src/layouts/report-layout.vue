@@ -1,17 +1,13 @@
 <template>
   <div>
-    <router-view v-slot="{ Component }">
-      <component :is="Component" />
+    <router-view v-slot='{ Component }'>
+      <component :is='Component' />
     </router-view>
   </div>
 </template>
 
 <script>
 export default {
-  name: "report-layout"
+  name: 'report-layout',
 }
 </script>
-
-<style scoped>
-
-</style>

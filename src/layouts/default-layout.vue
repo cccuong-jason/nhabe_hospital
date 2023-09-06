@@ -87,4 +87,8 @@ export default defineComponent({
     margin-left: 0 !important;
   }
 }
+
+.el-input__inner {
+  box-shadow: none !important;
+}
 </style>
