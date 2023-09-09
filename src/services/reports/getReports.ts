@@ -92,6 +92,22 @@ export function getDetailReport(report_reference: string, id: number): Promise<u
   return request.get(host)
 }
 
+export function updateReportStatus(data: unknown, id: number): Promise<unknown> {
+  const store = useAuthorizationTokenStore()
+  // @ts-ignore
+  const accessToken = store.access_token
+
+  const host: string = ''
+  request.setOptions({
+    prefix: `/report/get/undefined/?report_reference=${id}`,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + accessToken,
+    },
+  })
+  return request.put(host, data)
+}
+
 export function getNewAccessToken(refreshToken: string): Promise<AuthorizationToken> {
   const host: string = ''
   request.setOptions({

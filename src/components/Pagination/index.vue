@@ -36,7 +36,7 @@ const disabled = ref(false)
 const handleCurrentChange = async (val: number) => {
   console.log(`current page: ${val}`)
   const responseStore = useReportResponse()
-  const responseData = await getListReport()
+  const responseData = await getListReport(val)
   if (responseData.reports) {
     responseStore.setReportResponse(responseData)
   }

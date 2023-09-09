@@ -102,8 +102,8 @@
       </template>
       <template #footer>
         <div style='flex: auto'>
-          <el-button plain size='large'>Từ chối</el-button>
-          <el-button type='primary' size='large' plain>Xác nhận</el-button>
+          <el-button plain size='large' @click='updateReport("cancel")'>Từ chối</el-button>
+          <el-button type='primary' size='large' plain @click='updateReport("update")'>Xác nhận</el-button>
         </div>
       </template>
     </el-drawer>
@@ -112,13 +112,13 @@
 <script lang='ts'>
 import { defineComponent, reactive, ref } from 'vue'
 import { DotsVerticalIcon } from '@heroicons/vue/outline'
-import { ElLoading, TableColumnCtx, TableInstance } from 'element-plus'
+import { ElLoading, ElMessage, TableColumnCtx, TableInstance } from 'element-plus'
 import { ReportDashboard } from '../index.vue'
 import { transformList } from 'utils/index'
 import { useRouter } from 'vue-router'
 import { useReportStore } from 'modules/reports/store/state'
 import ReportDetail from 'modules/table/views/components/ReportDetail.vue'
-import { getDetailReport, getListReport } from '../../../../services/reports/getReports'
+import { getDetailReport, getListReport, updateReportStatus } from '../../../../services/reports/getReports'
 import { ReportState } from 'modules/reports/store/types'
 
 export default defineComponent({
@@ -219,12 +219,41 @@ export default defineComponent({
     const reportStore = useReportStore()
     const openDetail = async (report_reference: string, id: number) => {
       const data = await getDetailReport(report_reference, id)
-      console.log('data', data)
       if (data.report) {
+        reportStore.clearReportState()
         reportStore.saveReportState(data.report)
       }
-
       isReportDetail.value = true
+    }
+
+    const updateReport = async (status: string) => {
+      if (status === 'update') {
+        const data = await updateReportStatus({ status: 'đã xử lý' }, reportStore.reportState.id)
+        if (data.report) {
+          ElMessage({
+            message: 'Cập nhật thành công',
+            showClose: true,
+            type: 'success',
+          })
+          setTimeout(() => {
+            isReportDetail.value = false
+            window.location.reload()
+          }, 1000)
+        }
+      } else {
+        const data = await updateReportStatus({ status: 'từ chối' }, reportStore.reportState.id)
+        if (data.report) {
+          ElMessage({
+            message: 'Cập nhật thành công',
+            showClose: true,
+            type: 'success',
+          })
+          setTimeout(() => {
+            isReportDetail.value = false
+            window.location.reload()
+          }, 1000)
+        }
+      }
     }
 
 
@@ -240,6 +269,7 @@ export default defineComponent({
       openDetail,
       isReportDetail,
       reportStore,
+      updateReport,
     }
   },
 })

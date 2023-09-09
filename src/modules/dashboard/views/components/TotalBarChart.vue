@@ -1,31 +1,32 @@
 <template>
-  <div class="w-full h-auto">
+  <div class='w-full h-auto'>
     <el-card>
       <template #header>
-        <div class="flex flex-wrap items-center -mx-3.75">
-          <div class="max-w-full basis-0 grow px-6">
-            <h6 class="uppercase text-muted tracking-0.625 mb-1">{{ title }}</h6>
-            <h2 class="mb-0">{{ subcription }}</h2>
+        <div class='flex flex-wrap items-center -mx-3.75'>
+          <div class='max-w-full basis-0 grow px-6'>
+            <h6 class='uppercase text-muted tracking-0.625 mb-1'>{{ title }}</h6>
+            <h2 class='mb-0'>{{ subcription }}</h2>
           </div>
         </div>
       </template>
-      <div class="card-body">
+      <div class='card-body'>
         <BarChart
-          ref="totalChart"
-          :chartData="totalData"
-          :options="chartOptions"
-          :height="350"
-          class="h-83"
+          ref='totalChart'
+          :chartData='totalData'
+          :options='chartOptions'
+          :height='350'
+          class='h-83'
         />
       </div>
     </el-card>
   </div>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
 import { defineComponent, computed, ref } from 'vue'
 import { BarChart } from 'vue-chart-3'
 import { Chart, registerables } from 'chart.js'
+
 Chart.register(...registerables)
 
 export default defineComponent({
@@ -36,20 +37,20 @@ export default defineComponent({
   props: {
     title: {
       type: String,
-      default: 'Performance',
+      default: 'Phân tích',
     },
     subcription: {
       type: String,
-      default: 'Total orders',
+      default: 'Tổng số lượng',
     },
   },
   setup() {
     const totalChart = ref()
     const totalData = computed(() => ({
-      labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      labels: ['T7', 'T8', 'T9', 'T10', 'T11', 'T12'],
       datasets: [
         {
-          label: ' Sales',
+          label: 'Báo cáo',
           fill: true,
           data: [25, 20, 30, 22, 17, 29],
           backgroundColor: 'rgb(251 99 64)',
@@ -98,7 +99,7 @@ export default defineComponent({
               style: 'normal',
               lineHeight: 2,
             },
-            callback: function (value: number) {
+            callback: function(value: number) {
               if (!(value % 10)) {
                 return value
               }

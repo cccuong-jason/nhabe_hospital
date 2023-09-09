@@ -1190,12 +1190,17 @@ const fillPDFForm = async (copyForm) => {
 }
 
 const handleAnalytic = () => {
-  ElMessage({
-    message: 'Báo cáo đã được tạo thành công',
-    grouping: true,
-    showClose: true,
-    type: 'success',
-  })
+  isLoading.value = true
+  setTimeout(() => {
+    ElMessage({
+      message: 'Báo cáo đã được tạo thành công',
+      grouping: true,
+      showClose: true,
+      type: 'success',
+    })
+    isLoading.value = false
+  }, 1000)
+
 }
 
 </script>

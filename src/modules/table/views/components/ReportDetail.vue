@@ -224,6 +224,8 @@ const is_recorded = ref([reportStoreState.is_recorded])
 const is_client_noticed = ref([reportStoreState.is_client_noticed])
 const impact_assessment = ref([reportStoreState.impact_assessment])
 
+console.log(reportStoreState.report_reference)
+
 // Will get this from db
 </script>
 

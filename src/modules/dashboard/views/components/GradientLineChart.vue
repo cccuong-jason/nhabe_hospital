@@ -1,33 +1,33 @@
 <template>
-  <div class="w-full">
-    <el-card class="bg-gradient-to-r from-default to-dark-100">
+  <div class='w-full'>
+    <el-card class='bg-gradient-to-r from-default to-dark-100'>
       <template #header>
-        <div class="flex flex-wrap items-center bg-transparent">
-          <div class="max-w-full basis-0 grow">
-            <h6 class="uppercase text-light tracking-0.625 mb-1">{{ title }}</h6>
-            <h2 class="text-white mb-0">{{ subcription }}</h2>
+        <div class='flex flex-wrap items-center bg-transparent'>
+          <div class='max-w-full basis-0 grow'>
+            <h6 class='uppercase text-light tracking-0.625 mb-1'>{{ title }}</h6>
+            <h2 class='text-white mb-0'>{{ subcription }}</h2>
           </div>
-          <div class="max-w-full basis-0 grow">
-            <div class="flex flex-nowrap mb-0 pl-0 justify-end gap-x-3">
+          <div class='max-w-full basis-0 grow'>
+            <div class='flex flex-nowrap mb-0 pl-0 justify-end gap-x-3'>
               <div>
                 <el-button
-                  type="primary"
-                  size="small"
-                  class="py-2 px-3 lh:w-20 lg:h-9"
-                  @click="changeDataChart([0, 20, 10, 30, 15, 40, 20, 60])"
+                  type='primary'
+                  size='small'
+                  class='py-2 px-3 lh:w-20 lg:h-9'
+                  @click='changeDataChart([0, 20, 10, 30, 15, 40, 20, 60])'
                 >
-                  <span class="hidden md:block font-medium text-sm px-2">Month</span>
-                  <span class="md:hidden font-medium text-sm">M</span>
+                  <span class='hidden md:block font-medium text-sm px-2'>Tháng</span>
+                  <span class='md:hidden font-medium text-sm'>T</span>
                 </el-button>
               </div>
               <div>
                 <el-button
-                  class="el-button--secondary py-2 px-3 lh:w-20 lg:h-9"
-                  size="small"
-                  @click="changeDataChart([0, 20, 5, 25, 10, 30, 15, 40])"
+                  class='el-button--secondary py-2 px-3 lh:w-20 lg:h-9'
+                  size='small'
+                  @click='changeDataChart([0, 20, 5, 25, 10, 30, 15, 40])'
                 >
-                  <span class="hidden md:block text-indigo-410 font-medium text-sm px-2">Week</span>
-                  <span class="md:hidden text-indigo-410 font-medium text-sm">W</span>
+                  <span class='hidden md:block text-indigo-410 font-medium text-sm px-2'>Tuần</span>
+                  <span class='md:hidden text-indigo-410 font-medium text-sm'>W</span>
                 </el-button>
               </div>
             </div>
@@ -35,17 +35,18 @@
         </div>
       </template>
 
-      <div class="card-body bg-transparent">
-        <LineChart ref="salesChart" :chartData="salesData" :options="chartOptions" :height="350" />
+      <div class='card-body bg-transparent'>
+        <LineChart ref='salesChart' :chartData='salesData' :options='chartOptions' :height='350' />
       </div>
     </el-card>
   </div>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
 import { defineComponent, computed, ref } from 'vue'
 import { LineChart } from 'vue-chart-3'
 import { Chart, registerables } from 'chart.js'
+
 Chart.register(...registerables)
 
 export default defineComponent({
@@ -56,21 +57,21 @@ export default defineComponent({
   props: {
     title: {
       type: String,
-      default: 'Overview',
+      default: 'Tổng quan',
     },
     subcription: {
       type: String,
-      default: 'Sales value',
+      default: 'Loại báo cáo',
     },
   },
   setup() {
     const data = ref([0, 20, 10, 30, 15, 40, 20, 60])
     const salesChart = ref()
     const salesData = computed(() => ({
-      labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      labels: ['T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'],
       datasets: [
         {
-          label: ' Performance',
+          label: 'Báo cáo',
           tension: 0.4,
           pointRadius: 0,
           borderColor: 'rgb(94 114 228)',
@@ -124,9 +125,9 @@ export default defineComponent({
               style: 'normal',
               lineHeight: 2,
             },
-            callback: function (value: number) {
+            callback: function(value: number) {
               if (!(value % 10)) {
-                return `$${value}k`
+                return `${value}`
               }
             },
           },
@@ -140,10 +141,10 @@ export default defineComponent({
         },
         tooltip: {
           callbacks: {
-            label: function (context: any) {
+            label: function(context: any) {
               let label = context.dataset.label || ''
               if (label) {
-                label += `: $${context.parsed.y}k`
+                label += `: ${context.parsed.y}`
               }
               return label
             },
