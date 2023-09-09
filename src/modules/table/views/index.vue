@@ -15,17 +15,22 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 
 import ProjectTable from './components/ProjectTable.vue'
 import Pagination from 'components/Pagination/index.vue'
+import { getListReport, getNewAccessToken, ReportListResponse } from '../../../services/reports/getReports'
+import { ReportState } from 'modules/reports/store/types'
+import { useAuthorizationTokenStore, useReportResponse } from 'modules/auth/store/state'
+import { useReportStore } from 'modules/reports/store/state'
 
 export interface ReportDashboard {
-  date: string,
+  id: number,
+  created_at: Date,
   report: string
   form: string
   status: string
-  reporter: string
+  reporter_fullname: string
 }
 
 export default defineComponent({
@@ -35,113 +40,38 @@ export default defineComponent({
     ProjectTable,
   },
   setup() {
-    const tableData: ReportDashboard[] = [
-      {
-        date: '2023-09-01',
-        report: 'Nha Be Hospital Report 1',
-        form: 'Tự nguyện',
-        status: 'đang xử lý',
-        reporter: 'Chương Thành Long',
-      },
-      {
-        date: '2023-09-01',
-        report: 'Nha Be Hospital Report 2',
-        form: 'Tự nguyện',
-        status: 'đã duyệt',
-        reporter: 'Chương Thành Long',
-      },
-      {
-        date: '2023-08-26',
-        report: 'Nha Be Report 3',
-        form: 'Tự nguyện',
-        status: 'đã duyệt',
-        reporter: 'Chương Thành Long',
-      },
-      {
-        date: '2023-08-30',
-        report: 'Nha Be Hospital Report 4',
-        form: 'Tự nguyện',
-        status: 'đã duyệt',
-        reporter: 'Chương Thành Long',
-      },
-      {
-        date: '2023-08-31',
-        report: 'Nha Be Hospital Report 5',
-        form: 'Bắt buộc',
-        status: 'đã duyệt',
-        reporter: 'Chương Thành Long',
-      },
-      {
-        date: '2023-08-06',
-        report: 'Nha Be Hospital Report 6',
-        form: 'Tự nguyện',
-        status: 'đã duyệt',
-        reporter: 'Chương Thành Long',
-      },
-      {
-        date: '2023-07-30',
-        report: 'Nha Be Hospital Report 7',
-        form: 'Tự nguyện',
-        status: 'đã duyệt',
-        reporter: 'Chương Thành Long',
-      },
-      {
-        date: '2023-07-28',
-        report: 'Nha Be Hospital Report 8',
-        form: 'Tự nguyện',
-        status: 'đã duyệt',
-        reporter: 'Chương Thành Long',
-      },
-      {
-        date: '2023-07-15',
-        report: 'Nha Be Hospital Report 9',
-        form: 'Tự nguyện',
-        status: 'đã duyệt',
-        reporter: 'Chương Thành Long',
-      },
-      {
-        date: '2023-06-15',
-        report: 'Nha Be Hospital Report 10',
-        form: 'Tự nguyện',
-        status: 'đã duyệt',
-        reporter: 'Chương Thành Long',
-      },
-      {
-        date: '2023-07-13',
-        report: 'Nha Be Hospital Report 11',
-        form: 'Tự nguyện',
-        status: 'từ chối',
-        reporter: 'Chương Thành Long',
-      },
-      {
-        date: '2023-07-12',
-        report: 'Nha Be Hospital Report 12',
-        form: 'Bắt buộc',
-        status: 'đã duyệt',
-        reporter: 'Chương Thành Long',
-      },
-      {
-        date: '2023-07-13',
-        report: 'Nha Be Hospital Report 13',
-        form: 'Bắt buộc',
-        status: 'đã duyệt',
-        reporter: 'Chương Thành Long',
-      },
-      {
-        date: '2023-07-16',
-        report: 'Nha Be Hospital Report 14',
-        form: 'Bắt buộc',
-        status: 'đã duyệt',
-        reporter: 'Chương Thành Long',
-      },
-      {
-        date: '2023-07-17',
-        report: 'Nha Be Hospital Report 15',
-        form: 'Bắt buộc',
-        status: 'đã duyệt',
-        reporter: 'Chương Thành Long',
-      },
-    ]
+    let tableData = ref<ReportDashboard[]>([])
+    onMounted(async () => {
+      // Perform actions when the component is mounted
+      const responseStore = useReportResponse()
+      const responseData = await getListReport()
+      if (responseData.reports) {
+        responseStore.setReportResponse(responseData)
+        tableData.value = mapReportStateArrayToDashboard(responseData.reports)
+      } else {
+        const authorizationTokenStore = useAuthorizationTokenStore()
+        const responseData = await getNewAccessToken(authorizationTokenStore.refresh_token)
+        // tableData = mapReportStateArrayToDashboard(responseData.reports)
+        window.location.reload()
+      }
+    })
+
+    function mapReportStateArrayToDashboard(reportStates: ReportState[]): ReportDashboard[] {
+      return reportStates.map((reportState) => {
+        const { id, report_reference, is_required, created_at, status, reporter_fullname } = reportState
+
+        const reportDashboard: ReportDashboard = {
+          id,
+          created_at,
+          report: `Báo cáo số ${report_reference}`,
+          form: is_required === 'is_required' ? 'Bắt buộc' : 'Tự nguyện',
+          status,
+          reporter_fullname,
+        }
+
+        return reportDashboard
+      })
+    }
 
     return {
       tableData,

@@ -1,6 +1,7 @@
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
 import { defineConfig } from 'vite'
+
 const { visualizer } = require('rollup-plugin-visualizer')
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
@@ -28,16 +29,16 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/token': {
-        target: "http://localhost:8000/token",
-        rewrite: (path) => path.replace(/^\/token/, '')
+        target: 'http://localhost:8000/token',
+        rewrite: (path) => path.replace(/^\/token/, ''),
       },
       '/report': {
         target: 'http://localhost:8000/report',
-        rewrite: (path) => path.replace(/^\/report/, '')
+        rewrite: (path) => path.replace(/^\/report/, ''),
       },
       '/user': {
         target: 'http://localhost:8000/user',
-        rewrite: (path) => path.replace(/^\/user/, '')
+        rewrite: (path) => path.replace(/^\/user/, ''),
       },
     },
   },

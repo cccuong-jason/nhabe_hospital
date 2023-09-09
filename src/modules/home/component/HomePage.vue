@@ -2,7 +2,7 @@
   <div class='instruction-page flex items-center justify-center h-screen'>
     <el-space direction='vertical'>
       <span
-        class='text-3xl font-black align-bottom'>Chào mừng đến với hệ thống báo cáo y khoa của Bệnh viện Nhà Bè</span>
+        class='text-2xl font-black align-bottom mt-5'>Chào mừng đến với hệ thống báo cáo y khoa của Bệnh viện Nhà Bè</span>
       <span class='text-1.1 italic font-thin'>Vui lòng chọn tạo báo cáo hoặc truy cập bảng điều khiển (chỉ dành cho nhân viên bệnh viện)</span>
       <el-row :gutter='20' class='mt-5'>
         <el-col :span='12'>
@@ -20,7 +20,7 @@
             <template #default>
               <div class='text-center'>
                 <el-button bg class='text-1.5 font-medium w-full' size='large' text @click='$router.push("/reports")'>
-                  Tạo báo cáo
+                  Tạo báo cá
                 </el-button>
               </div>
             </template>

@@ -20,7 +20,7 @@
               class='font-bold'>{{ reportStoreState.client_medical_record_id }}</span>
             </el-descriptions-item>
             <el-descriptions-item label='Mã báo cáo'><span
-              class='font-bold'>{{ reportStoreState.report_id }}</span></el-descriptions-item>
+              class='font-bold'>{{ reportStoreState.report_reference }}</span></el-descriptions-item>
             <el-descriptions-item label='Trạng thái'>
               <el-tag :type="
                   reportStoreState.status === 'từ chối'
@@ -54,9 +54,9 @@
           direction='vertical'
           size='large'
         >
-          <el-descriptions-item label='Họ và tên'>{{ reportStoreState.reporter }}
+          <el-descriptions-item label='Họ và tên'>{{ reportStoreState.reporter_fullname }}
           </el-descriptions-item>
-          <el-descriptions-item label='Số điện thoại'>{{ reportStoreState.report_id }}</el-descriptions-item>
+          <el-descriptions-item label='Số điện thoại'>{{ reportStoreState.reporter_phone }}</el-descriptions-item>
           <el-descriptions-item label='Email'>{{ reportStoreState.client_fullname }}</el-descriptions-item>
           <el-descriptions-item label='Chức danh'>{{ reportStoreState.title ? reportStoreState.title : 'Không' }}
           </el-descriptions-item>
@@ -216,7 +216,7 @@ const reportStore = useReportStore()
 const reportStoreState = reportStore.$state.reportState
 
 const gender = ref([reportStoreState.client_gender])
-const incident_subject = ref([reportStoreState.subject_incident])
+const incident_subject = ref([reportStoreState.incident_subject])
 const incident_classification = ref([reportStoreState.incident_classification])
 const is_family_noticed = ref([reportStoreState.is_family_noticed])
 const is_informed = ref([reportStoreState.is_informed])

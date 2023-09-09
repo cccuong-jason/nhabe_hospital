@@ -535,7 +535,7 @@
 </template>
 
 <script lang='ts' setup>
-import cloneDeep from 'lodash.clonedeep';
+import cloneDeep from 'lodash.clonedeep'
 import { computed, markRaw, onMounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import type { FormInstance } from 'element-plus'
@@ -544,7 +544,9 @@ import { convertToUTC } from 'utils/index'
 import dayjs from 'dayjs'
 import { Download } from '@element-plus/icons-vue'
 import { createReport } from '../../../../services/reports/getReports'
-import { PDFDocument} from 'pdf-lib';
+import { PDFDocument, StandardFonts } from 'pdf-lib'
+
+import download from 'downloadjs'
 import BM01 from '@/assets/fillable_pdf/BM01.pdf'
 
 const router = useRoute()
@@ -912,7 +914,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   await formEl.validate((valid, fields) => {
     if (valid) {
 
-      const copyForm = cloneDeep(form);
+      const copyForm = cloneDeep(form)
 
       for (const key in form) {
         //@ts-ignore
@@ -986,6 +988,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
           })
         } else {
           loading.close()
+          formEl.resetFields()
           ElMessageBox.confirm(
             'Báo cáo của bạn đã được tạo và gửi đi. Bạn có muốn tải file pdf không?',
             'Thành công',
@@ -1034,23 +1037,25 @@ const resetForm = (formEl: FormInstance | undefined) => {
 }
 
 const fillPDFForm = async (copyForm) => {
+  const url = 'https://pdf-lib.js.org/assets/nunito/Nunito-Bold.ttf'
+  const fontBytes = await fetch(url).then(res => res.arrayBuffer())
   const formType = router.query.reportType == 'voluntary' ? 'is_voluntary' : 'is_required'
 
 
   const created_at = dayjs(copyForm.created_at)
   const issued_day = dayjs(copyForm.issued_date)
 
-  const created_day = created_at.date();
-  const created_month = created_at.month() + 1; // Months are zero-based, so we add 1
-  const created_year = created_at.year();
+  const created_day = created_at.date()
+  const created_month = created_at.month() + 1 // Months are zero-based, so we add 1
+  const created_year = created_at.year()
 
-  const issued_date = issued_day.date();
-  const issued_month = issued_day.month() + 1; // Months are zero-based, so we add 1
-  const issued_year = issued_day.year();
+  const issued_date = issued_day.date()
+  const issued_month = issued_day.month() + 1 // Months are zero-based, so we add 1
+  const issued_year = issued_day.year()
 
-  const hours = issued_day.format('HH');
-  const minutes = issued_day.format('mm');
-  const seconds = issued_day.format('ss');
+  const hours = issued_day.format('HH')
+  const minutes = issued_day.format('mm')
+  const seconds = issued_day.format('ss')
 
 
   const normalMappingToPdf = {
@@ -1080,10 +1085,12 @@ const fillPDFForm = async (copyForm) => {
     'observer_2': copyForm.observer_2,
   }
 
-  const pdfBytes = await fetch(BM01).then((res) => res.arrayBuffer());
-  const pdfDoc = await PDFDocument.load(pdfBytes);
+  const pdfBytes = await fetch(BM01).then((res) => res.arrayBuffer())
+  const pdfDoc = await PDFDocument.load(pdfBytes)
+  const pdfForm = pdfDoc.getForm()
+  const timesRomanBold = await pdfDoc.embedFont(StandardFonts.TimesRomanBold)
+  pdfForm.updateFieldAppearances(timesRomanBold)
 
-  const pdfForm = pdfDoc.getForm();
 
   // Handle form type
   if (formType == 'is_voluntary') {
@@ -1134,7 +1141,7 @@ const fillPDFForm = async (copyForm) => {
   // Handle incident classification
   for (const key of ['not_happen_incident_classification', 'happen_incident_classification'].values()) {
     //@ts-ignore
-    if (pdfForm.getCheckBox(key) && key.includes(form[key])) {
+    if (pdfForm.getCheckBox(key) && key.includes(copyForm['incident_classification'])) {
       pdfForm.getCheckBox(key).check()
     }
   }
@@ -1142,7 +1149,23 @@ const fillPDFForm = async (copyForm) => {
   // Handle impact assessment
   for (const key of ['light_impact_assessment', 'medium_impact_assessment', 'hard_impact_assessment'].values()) {
     //@ts-ignore
-    if (pdfForm.getCheckBox(key) && key.includes(form[key])) {
+    if (pdfForm.getCheckBox(key) && key.includes(copyForm['impact_assessment'])) {
+      pdfForm.getCheckBox(key).check()
+    }
+  }
+
+  // Handle client noticed
+  for (const key of ['yes_is_client_noticed', 'no_is_client_noticed', 'no_acknowledged_client_noticed'].values()) {
+    //@ts-ignore
+    if (pdfForm.getCheckBox(key) && key.includes(copyForm['is_client_noticed'])) {
+      pdfForm.getCheckBox(key).check()
+    }
+  }
+
+  // Handle is recorded
+  for (const key of ['yes_is_recorded', 'no_is_recorded', 'no_acknowledged_is_recorded'].values()) {
+    //@ts-ignore
+    if (pdfForm.getCheckBox(key) && key.includes(copyForm['is_recorded'])) {
       pdfForm.getCheckBox(key).check()
     }
   }
@@ -1150,29 +1173,13 @@ const fillPDFForm = async (copyForm) => {
   for (const key in normalMappingToPdf) {
     //@ts-ignore
     pdfForm.getTextField(key).setText(normalMappingToPdf[key])
-
+    pdfForm.getTextField(key).setFontSize(13)
   }
 
-  // form.getTextField('form').setText('blabla');
-  const modifiedPdfBytes = await pdfDoc.save();
+  pdfForm.flatten()
+  const modifiedPdfBytes = await pdfDoc.save()
 
-  const blob = new Blob([modifiedPdfBytes], { type: 'application/pdf' });
-
-  // Create a temporary URL for the Blob
-  const url = URL.createObjectURL(blob);
-
-  // Create a link element and set its attributes
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = 'filled_form.pdf';
-
-  // Append the link to the document body and trigger the download
-  document.body.appendChild(link);
-  link.click();
-
-  // Clean up the temporary URL and link element
-  URL.revokeObjectURL(url);
-  link.remove();
+  download(modifiedPdfBytes, `nhabe_baocao_${created_day}${created_month}${created_year}.pdf`, 'application/pdf')
 }
 
 </script>

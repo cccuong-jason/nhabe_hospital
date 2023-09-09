@@ -16,35 +16,36 @@ export const useReportStore = defineStore('report', {
   actions: {
     saveReportState(form: any) {
       this.reportState = {
-        id: 1,
-        report_id: form.reportId,
-        form: ReportsForm.required,
-        unit: '', // Assign the appropriate value
-        client_fullname: form.name,
-        client_birthdate: form.birthdate,
-        client_medical_record_id: form.num_medical,
-        client_gender: Genders[form.gender],
-        department: '', // Assign the appropriate value
-        subject_incident: IncidentSubjects[form.subject_incident],
+        id: form.id,
+        report_reference: form.report_reference,
+        is_required: form.is_required,
+        unit: form.unit,
+        client_fullname: form.client_fullname,
+        client_birthdate: form.client_birthdate,
+        client_medical_record_id: form.client_medical_record_id,
+        department: form.department,
+        incident_subject: form.incident_subject,
         incident_location: form.incident_location,
         exact_location: form.exact_location,
         issued_date: form.issued_date,
         short_description: form.short_description,
         proposal_solution: form.proposal_solution,
         performed_treatment: form.performed_treatment,
-        is_informed: BooleanChoices[form.is_informed],
-        is_recorded: BooleanChoices[form.is_recorded],
-        is_family_noticed: BooleanChoices[form.is_family_noticed],
-        is_client_noticed: BooleanChoices[form.is_client_noticed],
-        incident_classification: IncidentClassification[form.incident_classification],
-        impact_assessment: ImpactAssessment[form.impact_classification],
-        reporter: form.report.name, // Assuming user_id is the name of the reporter
+        is_informed: form.is_informed,
+        is_recorded: form.is_recorded,
+        is_family_noticed: form.is_family_noticed,
+        is_client_noticed: form.is_client_noticed,
+        incident_classification: form.incident_classification,
+        impact_assessment: form.impact_assessment,
+        reporter_fullname: form.reporter_fullname,
+        reporter_phone: form.reporter_phone,
+        reporter_email: form.reporter_email,
         observer_1: form.observer_1,
         observer_2: form.observer_2,
-        title: form.title.value,
-        status: 'đang xử lý', // Assign the appropriate value
-        created_at: form.created_at.toISOString(),
-        updated_at: form.updated_at.toISOString(),
+        title: form.title,
+        status: form.status,
+        created_at: form.created_at,
+        updated_at: form.updated_at,
       }
     },
     clearReportState() {
@@ -73,7 +74,6 @@ export const analysisState = defineStore({
       solution_executed: '',
       treatment_executed: '',
       updated_at: undefined,
-
     }
   },
 })
@@ -106,7 +106,7 @@ export const usePaginationStore = defineStore('response', {
         currentPage: this.currentPage,
         nextPage: this.nextPage,
         previousPage: this.previousPage,
-      };
+      }
     },
   },
-});
+})

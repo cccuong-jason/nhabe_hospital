@@ -20,7 +20,7 @@
       class='container relative xl:max-w-5.75xl lg:max-w-4.5xl md:max-w-2.625xl sm:max-w-0.25xl w-full mx-auto px-3.75 pb-12'
     >
       <div class='relative lg:max-w-5/12 md:max-w-7/12 w-full mx-auto md:px-2 -mt-32'>
-        <LoginForm :email="'admin@gmail.com'" />
+        <LoginForm :email="'nhabe_admin'" />
       </div>
     </div>
   </div>
@@ -31,6 +31,7 @@ import useStore from 'store'
 import SplitBackground from './components/SplitBackground.vue'
 import LoginForm from './components/LoginForm.vue'
 import WelcomeLabel from './components/WelcomeLabel.vue'
+import { useAuthorizationTokenStore } from 'modules/auth/store/state'
 
 export default defineComponent({
   components: {
@@ -40,7 +41,9 @@ export default defineComponent({
   },
   setup() {
     const store = useStore()
-    const isAuthenticated = computed<boolean>(() => store.auth.getAuthenticationState)
+    const authorizationTokenStore = useAuthorizationTokenStore()
+    const isAuthenticated = computed<boolean>(() => authorizationTokenStore.access_token !== '')
+    console.log('isAuthenticated', isAuthenticated.value)
     const accounts: string[] = ['admin@nhabe.com', 'creator@nhabe.com', 'member@nhabe.com']
     return {
       isAuthenticated,

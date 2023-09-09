@@ -193,6 +193,7 @@ import { useRoute } from 'vue-router'
 import Logo_Url from '@/assets/images/nhabe_logo.png'
 import John_Snow_Url from '@/assets/images/John_Snow.png'
 import SearchBar from 'components/SearchBar/index.vue'
+import { useAuthorizationTokenStore } from 'modules/auth/store/state'
 
 export default defineComponent({
   name: 'DefaultNav',
@@ -234,7 +235,9 @@ export default defineComponent({
     }
 
     const handleLogoutClick = () => {
+      const authorizationTokenStore = useAuthorizationTokenStore()
       store.auth.actLogout()
+      authorizationTokenStore.$reset()
     }
 
     const setSearchOpen = (v: boolean) => (isSearchOpen.value = v)

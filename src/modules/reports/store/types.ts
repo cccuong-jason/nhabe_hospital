@@ -2,18 +2,18 @@ import { reactive, ref } from 'vue'
 
 export interface ReportState {
   id: number;
-  report_id: string;
-  form: ReportsForm;
+  report_reference: string;
+  is_required: ReportsForm;
   unit: string;
   client_fullname: string;
-  client_birthdate: string;
+  client_birthdate: Date;
   client_medical_record_id: string;
   client_gender: Genders;
   department: string;
-  subject_incident: IncidentSubjects;
+  incident_subject: IncidentSubjects;
   incident_location: string;
   exact_location: string;
-  issued_date: string;
+  issued_date: Date;
   short_description: string;
   proposal_solution: string;
   performed_treatment: string;
@@ -23,41 +23,20 @@ export interface ReportState {
   is_client_noticed: BooleanChoices;
   incident_classification: IncidentClassification;
   impact_assessment: ImpactAssessment;
-  reporter_fullname: string; // Assuming user_id is of type string
-  reporter_phone: string; // Assuming user_id is of type string
-  reporter_email: string; // Assuming user_id is of type string
+  reporter_fullname: string;
+  reporter_phone: string;
+  reporter_email: string;
   observer_1: string;
   observer_2: string;
   title: string;
   status: string;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface AnalysisState {
-  id: number;
-  analysis_id: string;
-  detailed_description: string;
-  incident_type: string;
-  treatment_executed: string;
-  incident_reason: string;
-  solution_executed: string;
-  recommendation_incident_prevention: string;
-  group_leader_evaluation: string;
-  is_aligned_with_reporter: BooleanChoices;
-  is_accorded: BooleanChoices;
-  client_level: string;
-  organization_level: string;
-  reported: string; // Assuming user_id is of type string
   created_at: Date;
   updated_at: Date;
 }
 
 export enum ReportsForm {
-  voluntary = 'Voluntary',
-  required = 'Required'
-
-  // Define the structure of the reports_form object if needed
+  is_required = 'is_required',
+  is_voluntary = 'is_voluntary'
 }
 
 export enum Genders {

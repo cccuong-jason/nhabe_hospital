@@ -1,14 +1,9 @@
 import { request } from '../index'
 import { ReportState } from 'modules/reports/store/types'
+import { AuthorizationToken } from 'modules/auth/store/types'
+import { useAuthorizationTokenStore, useReportResponse } from 'modules/auth/store/state'
 
-interface AuthorizationToken {
-  access_token: string
-  token_type: string
-}
 
-interface ListResponse {
-
-}
 export function getProducts(offset = 0, categoryId: number = 0): Promise<ReportState> {
 
   const host: string = ''
@@ -35,23 +30,37 @@ export function getProducts(offset = 0, categoryId: number = 0): Promise<ReportS
   return request.get<ReportState>(host, { params })
 }
 
-export function getListReport(page: number = 1, limit: number = 20): Promise<unknown> {
+export interface ReportListResponse {
+  total_objects: number
+  per_page: number
+  current_page: number
+  next_page: number | null
+  prev_page: number | null
+  reports: ReportState[]
+}
+
+export function getListReport(page: number = 1, limit: number = 20): Promise<ReportListResponse> {
   const host: string = ''
   let prefix_url: string = ''
   if (page && limit) {
-    prefix_url += `/report/list/?page=${page}&limit=${limit}`;
+    prefix_url += `/report/list/?page=${page}&limit=${limit}`
   } else if (page) {
-    prefix_url += `/report/list/?page=${page}`;
+    prefix_url += `/report/list/?page=${page}`
   } else if (limit) {
-    prefix_url += `/report/list/?limit=${limit}`;
+    prefix_url += `/report/list/?limit=${limit}`
   }
 
-  console.log(prefix_url)
+  const store = useAuthorizationTokenStore()
+  // @ts-ignore
+  const accessToken = store.access_token
 
   request.setOptions({
-    prefix: prefix_url
+    prefix: prefix_url,
+    headers: {
+      'Authorization': 'Bearer ' + accessToken,
+    },
   })
-  return request.get(host)
+  return request.get<ReportListResponse>(host)
 }
 
 export function createReport(data: unknown): Promise<unknown> {
@@ -61,7 +70,35 @@ export function createReport(data: unknown): Promise<unknown> {
     prefix: '/report/create/',
     headers: {
       'Content-Type': 'application/json',
-    }
+    },
   })
   return request.post(host, data)
+}
+
+export function getDetailReport(report_reference: string, id: number): Promise<unknown> {
+  const store = useAuthorizationTokenStore()
+  // @ts-ignore
+  const accessToken = store.access_token
+
+  const host: string = ''
+  console.log(report_reference)
+  request.setOptions({
+    prefix: `/report/get/${report_reference}/?report_reference=${id}`,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + accessToken,
+    },
+  })
+  return request.get(host)
+}
+
+export function getNewAccessToken(refreshToken: string): Promise<AuthorizationToken> {
+  const host: string = ''
+  request.setOptions({
+    prefix: '/token/refresh',
+    params: {
+      refresh_token: refreshToken,
+    },
+  })
+  return request.post(host)
 }

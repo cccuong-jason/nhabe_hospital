@@ -7,11 +7,19 @@
         :filters=filterDateList
         column-key='date'
         fixed
-        label='Date'
+        label='NGÀY TẠO'
         prop='date'
         sortable
         width='180'
-      />
+      >
+        <template #default='scope'>
+          <div class='flex items-center'>
+            <span class='pl-5 mb-0 text-0.875 font-semibold cursor-auto'>{{
+                scope.row.created_at
+              }}</span>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label='BÁO CÁO' min-width='280'>
         <template #default='scope'>
           <div class='flex items-center'>
@@ -66,14 +74,15 @@
         <template #default='scope'>
           <div class='px-4 flex items-center'>
             <div class='flex justify-center -space-x-3'>
-              {{ scope.row.reporter }}
+              {{ scope.row.reporter_fullname }}
             </div>
           </div>
         </template>
       </el-table-column>
       <el-table-column fixed='right' label='THAO TÁC' width='200'>
         <template #default='scope'>
-          <el-button plain link size='small' type='primary' @click='openDetail'>Chi tiết
+          <el-button plain link size='small' type='primary'
+                     @click='openDetail(scope.row.report_reference, scope.row.id)'>Chi tiết
           </el-button
           >
           <el-button v-show="scope.row.form === 'Bắt buộc'" link size='small' type='primary' @click='openAnalyticForm'
@@ -109,6 +118,8 @@ import { transformList } from 'utils/index'
 import { useRouter } from 'vue-router'
 import { useReportStore } from 'modules/reports/store/state'
 import ReportDetail from 'modules/table/views/components/ReportDetail.vue'
+import { getDetailReport, getListReport } from '../../../../services/reports/getReports'
+import { ReportState } from 'modules/reports/store/types'
 
 export default defineComponent({
   name: 'ProjectTable',
@@ -144,10 +155,10 @@ export default defineComponent({
       tableRef.value!.clearFilter()
     }
 
-    const filterDateList = transformList(props.tableData, 'date')
+    const filterDateList = transformList(props.tableData, 'created_at')
     const filterStatusList = transformList(props.tableData, 'status')
     const filterFormList = transformList(props.tableData, 'form')
-    const filterReporterList = transformList(props.tableData, 'reporter')
+    const filterReporterList = transformList(props.tableData, 'reporter_fullname')
 
     const filterHandler = (
       value: string,
@@ -206,11 +217,16 @@ export default defineComponent({
 
     const isReportDetail = ref(false)
     const reportStore = useReportStore()
-    const openDetail = () => {
-      reportStore.saveReportState(form)
-      window.history.replaceState(null, '', `/dashboard/reports/${reportStore.reportState.report_id}`)
+    const openDetail = async (report_reference: string, id: number) => {
+      const data = await getDetailReport(report_reference, id)
+      console.log('data', data)
+      if (data.report) {
+        reportStore.saveReportState(data.report)
+      }
+
       isReportDetail.value = true
     }
+
 
     return {
       customColorMethod,
