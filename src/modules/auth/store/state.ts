@@ -59,5 +59,6 @@ export const useReportResponse = defineStore('reportResponse', {
       this.$state.prev_page = reportResponse.prev_page
       this.$state.reports = reportResponse.reports
     },
+
   },
 })

@@ -7,7 +7,7 @@
       <el-row>
         <el-col :span='12'>
           <div class='content-center grid align-middle justify-center items-center w-1/2 fixed h-screen'>
-            <span class='text-3xl font-black align-bottom text-white'>MẪU TÌM HIỂU VÀ PHÂN TÍCH SỰ CỐ</span>
+            <span class='text-2xl font-black align-bottom text-white'>MẪU TÌM HIỂU VÀ PHÂN TÍCH SỰ CỐ</span>
             <span class='text-1.1 italic font-thin text-white'>(Ban hành kèm theo Quy trình số 01/QT-QLCL ngày 25/05/2020 của Bệnh viện huyện Nhà Bè)</span>
           </div>
         </el-col>
@@ -29,7 +29,7 @@
                   </template>
                   <div class='card-header-description mt-2'>
                     <el-form-item label='Mô tả chi tiết sự cố'>
-                      <el-input v-model='analyticForm.performed_treatment' class='mt-4 mb-4'
+                      <el-input v-model='analyticForm.treatment_executed' class='mt-4 mb-4'
                                 placeholder='(Mô tả cả xử lý tức thời và hậu quả. Đối với loét tỳ đè, chỉ ra cụ thể vị trí, bên, phạm vi và tình trạng lúc nhập viện. Đối với sai sót về thuốc, liệt kê rõ tất cả thuốc (đính kèm thêm 1 tờ liệt kê nếu cần)'
                                 type='textarea' />
                     </el-form-item>
@@ -73,7 +73,7 @@
                   </template>
                   <div v-for='(incident, id) in finalReasonList' :key='incident'>
                     <el-form-item :label='`${id+1}. ${incident.title}`'>
-                      <el-checkbox-group v-model='analyticForm.incident_type' :max='1' class='flex flex-col'>
+                      <el-checkbox-group v-model='analyticForm.incident_reason' :max='1' class='flex flex-col'>
                         <el-checkbox v-for='incident in incident.list' :label='incident' />
                       </el-checkbox-group>
                     </el-form-item>
@@ -241,7 +241,7 @@
       <el-row>
         <el-col :span='12'>
           <div class='content-center grid align-middle justify-center items-center w-1/2 fixed h-screen'>
-            <span class='text-3xl font-black align-bottom text-white'>MẪU BÁO CÁO SỰ CỐ Y KHOA</span>
+            <span class='text-2xl font-black align-bottom text-white'>MẪU BÁO CÁO SỰ CỐ Y KHOA</span>
             <span class='text-1.1 italic font-thin text-white'>(Ban hành kèm theo Quy trình số 01/QT-QLCL ngày 25/05/2020
               của
               Bệnh viện huyện Nhà Bè)
@@ -561,7 +561,7 @@ const analyticForm = reactive(
     detailed_description: '',
     incident_type: ref([]),
     treatment_executed: '',
-    incident_reason: '',
+    incident_reason: ref([]),
     solution_executed: '',
     recommendation_incident_prevention: '',
     group_leader_evaluation: '',

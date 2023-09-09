@@ -28,7 +28,6 @@ total_objects.value = responseStore.total_objects
 const currentPage1 = ref(1)
 currentPage1.value = responseStore.current_page
 
-console.log(responseStore.current_page, responseStore.total_objects)
 const pageSize4 = ref(15)
 const small = ref(false)
 const background = ref(false)
