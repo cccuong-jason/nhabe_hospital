@@ -2,6 +2,7 @@ import { request } from '../index'
 import { ReportState } from 'modules/reports/store/types'
 import { AuthorizationToken } from 'modules/auth/store/types'
 import { useAuthorizationTokenStore, useReportResponse } from 'modules/auth/store/state'
+import { result } from 'lodash'
 
 
 export function getProducts(offset = 0, categoryId: number = 0): Promise<ReportState> {
@@ -92,20 +93,44 @@ export function getDetailReport(report_reference: string, id: number): Promise<u
   return request.get(host)
 }
 
-export function updateReportStatus(data: unknown, id: number): Promise<unknown> {
+// @ts-ignore
+export async function updateReportStatus(data: unknown, id: number): any {
   const store = useAuthorizationTokenStore()
   // @ts-ignore
   const accessToken = store.access_token
 
-  const host: string = ''
-  request.setOptions({
-    prefix: `/report/get/undefined/?report_reference=${id}`,
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + accessToken,
-    },
-  })
-  return request.put(host, data)
+  var myHeaders = new Headers()
+  myHeaders.append('accept', 'application/json')
+  myHeaders.append('Content-Type', 'application/json')
+  myHeaders.append('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaGFiZV9hZG1pbiIsImV4cCI6MTY5NDI0MTM3OX0.e15St_1DRDmrcU-1U_CRKIW-eE2Q-6UBvmTgPLZtl5U')
+
+  var raw = JSON.stringify(data)
+
+  var requestOptions = {
+    method: 'PUT',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow',
+  }
+
+  // @ts-ignore
+  await fetch('/report/update/string/?report_reference=1', requestOptions)
+    .then(response => response.text())
+    .then(result => {
+      console.log(result)
+      return result
+    })
+    .catch(error => console.log('error', error))
+
+  // const host: string = ''
+  // request.setOptions({
+  //   prefix: `/report/get/undefined/?report_reference=${id}`,
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //     'Authorization': 'Bearer ' + accessToken,
+  //   },
+  // })
+  // return request.put(host, data)
 }
 
 export function getNewAccessToken(refreshToken: string): Promise<AuthorizationToken> {

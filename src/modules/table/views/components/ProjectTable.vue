@@ -1,7 +1,7 @@
 <template>
   <div class='w-full'>
-    <el-table ref='tableRef' :class='`is-${theme}`' :data='tableData' row-key='date' stripe style='width: 100%'
-              height='70vh'>
+    <el-table ref='tableRef' :class='`is-${theme}`' :data='tableData' height='70vh' row-key='date' stripe
+              style='width: 100%'>
       <el-table-column
         :filter-method='filterHandler'
         :filters=filterDateList
@@ -30,18 +30,19 @@
         </template>
       </el-table-column>
       <el-table-column :filter-method=filterHandler :filters=filterFormList column-key='form' label='LOẠI BÁO CÁO'
-                       prop='form'
-                       min-width='130'>
+                       min-width='130'
+                       prop='form'>
         <template #default='scope'>
           <div class='px-4 cursor-auto'>
             <span class='text-0.8125 font-normal'>{{ scope.row.form }}</span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column :filter-method='filterHandler' :filters=filterStatusList column-key='status' prop='status'
+      <el-table-column :filter-method='filterHandler' :filters=filterStatusList column-key='status'
                        filter-placement='bottom-end'
                        label='TRẠNG THÁI'
-                       min-width='167'>
+                       min-width='167'
+                       prop='status'>
         <template #default='scope'>
           <el-tag :type="
                   scope.row.status === 'từ chối'
@@ -69,8 +70,8 @@
       </el-table-column>
       <el-table-column :filter-method=filterHandler :filters='filterReporterList' column-key='reporter'
                        label='NGƯỜI BÁO CÁO'
-                       prop='reporter'
-                       min-width='155'>
+                       min-width='155'
+                       prop='reporter'>
         <template #default='scope'>
           <div class='px-4 flex items-center'>
             <div class='flex justify-center -space-x-3'>
@@ -81,12 +82,12 @@
       </el-table-column>
       <el-table-column fixed='right' label='THAO TÁC' width='200'>
         <template #default='scope'>
-          <el-button plain link size='small' type='primary'
+          <el-button link plain size='small' type='primary'
                      @click='openDetail(scope.row.report_reference, scope.row.id)'>Chi tiết
           </el-button
           >
-          <el-button link size='small' type='primary' @click='openAnalyticForm'
-                     plain>Tạo phân tích
+          <el-button link plain size='small' type='primary'
+                     @click='openAnalyticForm'>Tạo phân tích
           </el-button>
         </template>
       </el-table-column>
@@ -103,7 +104,7 @@
       <template #footer>
         <div style='flex: auto'>
           <el-button plain size='large' @click='updateReport("cancel")'>Từ chối</el-button>
-          <el-button type='primary' size='large' plain @click='updateReport("update")'>Xác nhận</el-button>
+          <el-button plain size='large' type='primary' @click='updateReport("update")'>Xác nhận</el-button>
         </div>
       </template>
     </el-drawer>
@@ -118,8 +119,7 @@ import { transformList } from 'utils/index'
 import { useRouter } from 'vue-router'
 import { useReportStore } from 'modules/reports/store/state'
 import ReportDetail from 'modules/table/views/components/ReportDetail.vue'
-import { getDetailReport, getListReport, updateReportStatus } from '../../../../services/reports/getReports'
-import { ReportState } from 'modules/reports/store/types'
+import { getDetailReport, updateReportStatus } from '../../../../services/reports/getReports'
 
 export default defineComponent({
   name: 'ProjectTable',
@@ -229,30 +229,26 @@ export default defineComponent({
     const updateReport = async (status: string) => {
       if (status === 'update') {
         const data = await updateReportStatus({ status: 'đã xử lý' }, reportStore.reportState.id)
-        if (data.report) {
-          ElMessage({
-            message: 'Cập nhật thành công',
-            showClose: true,
-            type: 'success',
-          })
-          setTimeout(() => {
-            isReportDetail.value = false
-            window.location.reload()
-          }, 1000)
-        }
+        ElMessage({
+          message: 'Cập nhật thành công',
+          showClose: true,
+          type: 'success',
+        })
+        setTimeout(() => {
+          isReportDetail.value = false
+          window.location.reload()
+        }, 1000)
       } else {
-        const data = await updateReportStatus({ status: 'từ chối' }, reportStore.reportState.id)
-        if (data.report) {
-          ElMessage({
-            message: 'Cập nhật thành công',
-            showClose: true,
-            type: 'success',
-          })
-          setTimeout(() => {
-            isReportDetail.value = false
-            window.location.reload()
-          }, 1000)
-        }
+        const data = updateReportStatus({ status: 'từ chối' }, reportStore.reportState.id)
+        ElMessage({
+          message: 'Cập nhật thành công',
+          showClose: true,
+          type: 'success',
+        })
+        setTimeout(() => {
+          isReportDetail.value = false
+          window.location.reload()
+        }, 1000)
       }
     }
 
