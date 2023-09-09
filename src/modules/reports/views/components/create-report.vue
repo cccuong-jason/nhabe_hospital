@@ -105,7 +105,7 @@
                 </el-card>
                 <div class='flex justify-items-end'>
                   <el-form-item class='justify-end'>
-                    <el-button type='primary' @click='onSubmit'>Tạo báo cáo</el-button>
+                    <el-button type='primary' @click='handleAnalytic'>Tạo phân tích</el-button>
                     <el-button>Cancel</el-button>
                   </el-form-item>
                 </div>
@@ -219,7 +219,7 @@
                 <el-divider></el-divider>
                 <div class='flex justify-items-end'>
                   <el-form-item class='justify-end'>
-                    <el-button type='primary' @click='onSubmit'>Tạo báo cáo</el-button>
+                    <el-button type='primary' @click='onSubmit'>Tạo phân tích</el-button>
                     <el-button>Cancel</el-button>
                   </el-form-item>
                 </div>
@@ -551,9 +551,11 @@ import BM01 from '@/assets/fillable_pdf/BM01.pdf'
 
 const router = useRoute()
 const isAnalytic = computed(() => router.query.reportForm === 'analytic')
+const medicalIssue = computed(() => router.query.medicalIssue.toString())
 const analyticTab = ref('employee')
 const reportFormRef = ref<FormInstance>()
 const isLoading = ref(false)
+
 
 const analyticForm = reactive(
   {
@@ -607,6 +609,11 @@ const form = reactive({
   created_at: dayjs.utc(new Date()).local(),
   updated_at: dayjs.utc(new Date()).local(),
 })
+
+// onMounted(() => {
+//   //@ts-ignore
+//   form.short_description = medicalIssue
+// })
 
 const technicalProcess = [
   'Không có sự đồng ý của người bệnh/người nhà (đối với những kỹ thuật, thủ thuật quy định phải ký cam kết)',
@@ -974,6 +981,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 
       const payload = JSON.stringify(copyForm)
 
+      console.log(payload)
+
       const loading = ElLoading.service({
         lock: true,
         text: 'Báo cáo đang được tạo và gửi đi',
@@ -1028,7 +1037,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 
 
 const mapValue = (form: any, key: string, mapping: any) => {
-  form[key] = mapping[form[key]]
+  form[key] = mapping[form[key]].normalize('NFC')
 }
 
 const resetForm = (formEl: FormInstance | undefined) => {
@@ -1037,8 +1046,6 @@ const resetForm = (formEl: FormInstance | undefined) => {
 }
 
 const fillPDFForm = async (copyForm) => {
-  const url = 'https://pdf-lib.js.org/assets/nunito/Nunito-Bold.ttf'
-  const fontBytes = await fetch(url).then(res => res.arrayBuffer())
   const formType = router.query.reportType == 'voluntary' ? 'is_voluntary' : 'is_required'
 
 
@@ -1163,12 +1170,12 @@ const fillPDFForm = async (copyForm) => {
   }
 
   // Handle is recorded
-  for (const key of ['yes_is_recorded', 'no_is_recorded', 'no_acknowledged_is_recorded'].values()) {
-    //@ts-ignore
-    if (pdfForm.getCheckBox(key) && key.includes(copyForm['is_recorded'])) {
-      pdfForm.getCheckBox(key).check()
-    }
-  }
+  // for (const key of ['yes_is_recorded', 'no_is_recorded', 'no_acknowledged_is_recorded'].values()) {
+  //   //@ts-ignore
+  //   if (pdfForm.getCheckBox(key) && key.includes(copyForm['is_recorded'])) {
+  //     pdfForm.getCheckBox(key).check()
+  //   }
+  // }
 
   for (const key in normalMappingToPdf) {
     //@ts-ignore
@@ -1180,6 +1187,15 @@ const fillPDFForm = async (copyForm) => {
   const modifiedPdfBytes = await pdfDoc.save()
 
   download(modifiedPdfBytes, `nhabe_baocao_${created_day}${created_month}${created_year}.pdf`, 'application/pdf')
+}
+
+const handleAnalytic = () => {
+  ElMessage({
+    message: 'Báo cáo đã được tạo thành công',
+    grouping: true,
+    showClose: true,
+    type: 'success',
+  })
 }
 
 </script>

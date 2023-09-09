@@ -20,7 +20,7 @@
             <template #default>
               <div class='text-center'>
                 <el-button bg class='text-1.5 font-medium w-full' size='large' text @click='$router.push("/reports")'>
-                  Tạo báo cá
+                  Tạo báo cáo
                 </el-button>
               </div>
             </template>

@@ -111,11 +111,19 @@ export default {
           lock: true,
           background: 'rgba(0, 0, 0, 0.7)',
         })
+        console.log(shortIncidentDescription.value)
 
         setTimeout(() => {
           loading.close()
-          router.push({ name: 'CreateReport', query: { reportType: reportType.value, reportForm: 'report' } })
-        }, 1500)
+          router.push({
+            name: 'CreateReport',
+            query: {
+              reportType: reportType.value,
+              reportForm: 'report',
+              medicalIssue: shortIncidentDescription.value[2],
+            },
+          })
+        }, 1000)
       }
     }
 
