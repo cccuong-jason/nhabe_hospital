@@ -85,7 +85,7 @@
                      @click='openDetail(scope.row.report_reference, scope.row.id)'>Chi tiết
           </el-button
           >
-          <el-button v-show="scope.row.form === 'Bắt buộc'" link size='small' type='primary' @click='openAnalyticForm'
+          <el-button link size='small' type='primary' @click='openAnalyticForm'
                      plain>Tạo phân tích
           </el-button>
         </template>

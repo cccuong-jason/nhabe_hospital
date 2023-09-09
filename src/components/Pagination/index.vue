@@ -34,9 +34,6 @@ const small = ref(false)
 const background = ref(false)
 const disabled = ref(false)
 
-const handleSizeChange = (val: number) => {
-  console.log(`${val} items per page`)
-}
 const handleCurrentChange = async (val: number) => {
   console.log(`current page: ${val}`)
   const responseStore = useReportResponse()
